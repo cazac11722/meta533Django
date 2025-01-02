@@ -53,8 +53,6 @@ MIDDLEWARE = [
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
-    "https://lias303.pythonanywhere.com/",
-    "https://cazac11722.github.io/",
 ]
 
 ROOT_URLCONF = 'config.urls'
