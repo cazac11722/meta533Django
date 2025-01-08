@@ -42,3 +42,28 @@ class ApplicationDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = ApplicationDetail
         fields = "__all__"
+
+
+
+class ApplicationDetailUserFindSerializer(serializers.ModelSerializer):
+    applications_data = ApplicationDetailSerializer(many=True, read_only=True, source='details')
+
+    class Meta:
+        model = Application
+        fields = [
+            'id',
+            'application_count',
+            'application_cost',
+            'applications_data',
+        ]
+
+class ApplicationDetailUserSerializer(serializers.ModelSerializer):
+    applications_data = ApplicationDetailUserFindSerializer(many=True, read_only=True, source='applications')
+
+    class Meta:
+        model = LandingPage
+        fields = [
+            'id',
+            'user',
+            'applications_data',
+        ]

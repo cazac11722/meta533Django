@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import LandingPageViewSet, LandingPageUserViewSet,LandingPageUrlViewSet, VisitViewSet, VisitDetailViewSet, ApplicationViewSet, ApplicationDetailViewSet
+from .views import LandingPageViewSet, LandingPageUserViewSet,LandingPageUrlViewSet, VisitViewSet, VisitDetailViewSet, ApplicationViewSet, ApplicationDetailViewSet, ApplicationUserViewSet
 
 urlpatterns = [
     path('landing-pages/', LandingPageViewSet.as_view({'get': 'list', 'post': 'create'}), name='landing-page-list-create'),
@@ -18,4 +18,5 @@ urlpatterns = [
 
     path('application-details/', ApplicationDetailViewSet.as_view({'get': 'list', 'post': 'create'}), name='application-detail-list-create'),
     path('application-details/<int:pk>/', ApplicationDetailViewSet.as_view({'get': 'retrieve', 'put': 'update', 'delete': 'destroy'}), name='application-detail-detail'),
+    path('application-details/user/<int:user>/', ApplicationUserViewSet.as_view({'get': 'list'}), name='application-detail-detail'),
 ]

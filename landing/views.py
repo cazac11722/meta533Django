@@ -1,6 +1,6 @@
 from rest_framework import viewsets
 from .models import LandingPage, Visit, VisitDetail, Application, ApplicationDetail
-from .serializers import LandingPageSerializer, VisitSerializer, VisitDetailSerializer, ApplicationSerializer, ApplicationDetailSerializer
+from .serializers import LandingPageSerializer, VisitSerializer, VisitDetailSerializer, ApplicationSerializer, ApplicationDetailSerializer, ApplicationDetailUserSerializer
 
 class LandingPageViewSet(viewsets.ModelViewSet):
     queryset = LandingPage.objects.all()
@@ -92,3 +92,15 @@ class ApplicationDetailViewSet(viewsets.ModelViewSet):
         application.application_cost += 100  # 예: 신청당 비용이 고정된 값이라고 가정
         application.save()
 
+class ApplicationUserViewSet(viewsets.ModelViewSet):
+    serializer_class = ApplicationDetailUserSerializer
+
+    def get_queryset(self):
+        """
+        URL 경로에서 'user' 값을 가져와 해당 사용자의 데이터를 필터링합니다.
+        """
+        user_id = self.kwargs.get('user')  # URL의 <int:user>에서 값 가져오기
+        if user_id:
+            data_list = LandingPage.objects.filter(user=user_id)
+
+            return data_list

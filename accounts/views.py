@@ -87,3 +87,49 @@ class UserListView(APIView):
         users = User.objects.all()
         serializer = ExtendedUserSerializer(users, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+class UserView(APIView):
+    """
+    특정 회원 정보 보기, 수정, 삭제 API (광고대행사 정보 포함)
+    """
+    permission_classes = [AllowAny]
+
+    def get(self, request, user):
+        """
+        특정 사용자 정보 조회
+        """
+        try:
+            user_instance = User.objects.get(id=user)
+            serializer = ExtendedUserSerializer(user_instance)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except User.DoesNotExist:
+            return Response({"detail": "해당 사용자를 찾을 수 없습니다."}, status=status.HTTP_404_NOT_FOUND)
+
+    def put(self, request, user):
+        """
+        특정 사용자 정보 수정
+        """
+        try:
+            user_instance = User.objects.get(id=user)
+        except User.DoesNotExist:
+            return Response({"detail": "해당 사용자를 찾을 수 없습니다."}, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = ExtendedUserSerializer(user_instance, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({
+                "message": "사용자 정보가 성공적으로 수정되었습니다.",
+                "user": serializer.data
+            }, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, user):
+        """
+        특정 사용자 삭제
+        """
+        try:
+            user_instance = User.objects.get(id=user)
+            user_instance.delete()
+            return Response({"message": "사용자가 성공적으로 삭제되었습니다."}, status=status.HTTP_204_NO_CONTENT)
+        except User.DoesNotExist:
+            return Response({"detail": "해당 사용자를 찾을 수 없습니다."}, status=status.HTTP_404_NOT_FOUND)
