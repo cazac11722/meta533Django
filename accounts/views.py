@@ -6,7 +6,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework import status
-from .serializers import UserSerializer
+from .serializers import CustomTokenObtainPairSerializer, UserSerializer
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
@@ -34,12 +34,14 @@ class RegisterView(APIView):
                 }
             }, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+     
 
 class LoginView(TokenObtainPairView):
     """
     로그인 API
     """
-    serializer_class =  TokenObtainPairSerializer
+    serializer_class =  CustomTokenObtainPairSerializer
+
 
 
 class UserListView(APIView):
